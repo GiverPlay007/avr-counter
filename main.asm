@@ -1,4 +1,4 @@
-.ORG 0X0
+.ORG 0x0
 
 ; Display digits bits
 .EQU DIG_0 = 0b00111111
@@ -38,29 +38,29 @@ LOOP:
 
 UPDATE_INC:
   
-  SBIS PINB, PB2    ; End increment subroutine if increment the button is not pressed
+  SBIS  PINB, PB2   ; End increment subroutine if increment the button is not pressed
   RET
 
   RCALL INCREMENT   ; Call the increment subroutine
   RCALL COMPARE     ; Set the display digit
   OUT   PORTD, R21  ; Apply the display digit
 STAY_INC:
-  SBIC PINB, PB2
-  RJMP STAY_INC     ; Stay while the increment button is pressed
+  SBIC  PINB, PB2
+  RJMP  STAY_INC    ; Stay while the increment button is pressed
   RET
 
 
 UPDATE_DEC:
   
-  SBIS PINB, PB1    ; End decrement subroutine if the decrement button is not pressed
+  SBIS  PINB, PB1   ; End decrement subroutine if the decrement button is not pressed
   RET
 
   RCALL DECREMENT   ; Call the decrement subrountine
   RCALL COMPARE     ; Set the display digit
   OUT   PORTD, R21  ; Apply the display digit
 STAY_DEC:
-  SBIC PINB, PB1
-  RJMP STAY_DEC     ; Stay while the decrement button is pressed
+  SBIC  PINB, PB1
+  RJMP  STAY_DEC     ; Stay while the decrement button is pressed
   RET
 
 
