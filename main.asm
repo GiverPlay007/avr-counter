@@ -24,7 +24,8 @@ BEGIN:
   LDI R16,   0b0         ; All pins are input
   OUT DDRB,  R16         ; Set pins as input
 
-  LDI R21,   0x0         ; Set counter to 0
+  LDI R20,   0x0         ; Set counter to 0
+  LDI R21,   DIG_0       ; Set the initial digit do 0
   OUT PORTD, R21         ; Apply the display digit
 
 
