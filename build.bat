@@ -1,6 +1,6 @@
 @echo off
 set OUT=build\out
-set CHIP_INC=%ARDUINO%\MPLABX\v5.50\packs\Microchip\ATmega_DFP\2.3.126\avrasm\inc
+set CHIP_INC=C:\Program Files\Microchip\MPLABX\v6.05\packs\Microchip\ATmega_DFP\3.0.158\avrasm\inc
 
 if not exist "build" (
   mkdir build

@@ -1,17 +1,7 @@
 .ORG 0x0
 
 ; Display digits bits
-.EQU DIG_0 = 0b00111111
-.EQU DIG_1 = 0b00000110
-.EQU DIG_2 = 0b01011011
-.EQU DIG_3 = 0b01001111
-.EQU DIG_4 = 0b01100110
-.EQU DIG_5 = 0b01101101
-.EQU DIG_6 = 0b01111101
-.EQU DIG_7 = 0b00000111
-.EQU DIG_8 = 0b01111111
-.EQU DIG_9 = 0b01101111
-
+DIGITS: .DB 0b00111111, 0b00000110, 0b01011011, 0b01001111, 0b01100110, 0b01101101, 0b01111101, 0b00000111, 0b01111111, 0b01101111
 
 BEGIN:
 
@@ -24,9 +14,9 @@ BEGIN:
   LDI R16,   0b0         ; All pins are input
   OUT DDRB,  R16         ; Set pins as input
 
-  LDI R20,   0x0         ; Set counter to 0
-  LDI R21,   DIG_0       ; Set the initial digit do 0
-  OUT PORTD, R21         ; Apply the display digit
+  LDI   R20,   0x0       ; Set counter to 0
+  RCALL LOAD_DIGIT
+  OUT   PORTD, R21       ; Apply the display digit
 
 
 LOOP:
@@ -43,7 +33,7 @@ UPDATE_INC:
   RET
 
   RCALL INCREMENT   ; Call the increment subroutine
-  RCALL COMPARE     ; Set the display digit
+  RCALL LOAD_DIGIT  ; Set the display digit
   OUT   PORTD, R21  ; Apply the display digit
 STAY_INC:
   SBIC  PINB, PB2
@@ -57,7 +47,7 @@ UPDATE_DEC:
   RET
 
   RCALL DECREMENT   ; Call the decrement subrountine
-  RCALL COMPARE     ; Set the display digit
+  RCALL LOAD_DIGIT  ; Set the display digit
   OUT   PORTD, R21  ; Apply the display digit
 STAY_DEC:
   SBIC  PINB, PB1
@@ -91,49 +81,11 @@ RET_DEC:
   DEC  R20
   RET
 
-; Set display digit according to the counter register value
-COMPARE:
-  
-  LDI  R16, DIG_0  ; if (counter == 0)
-  CPI  R20, 0      ; digit = DIG_0
-  BREQ RETURN
-
-  LDI  R16, DIG_1  ; if (counter == 1)
-  CPI  R20, 1      ; digit = DIG_1
-  BREQ RETURN
-
-  LDI  R16, DIG_2  ; if (counter == 2)
-  CPI  R20, 2      ; digit = DIG_2
-  BREQ RETURN
-
-  LDI  R16, DIG_3  ; if (counter == 3)
-  CPI  R20, 3      ; digit = DIG_3
-  BREQ RETURN
-
-  LDI  R16, DIG_4  ; if (counter == 4)
-  CPI  R20, 4      ; digit = DIG_4
-  BREQ RETURN
-
-  LDI  R16, DIG_5  ; if (counter == 5)
-  CPI  R20, 5      ; digit = DIG_5
-  BREQ RETURN
-
-  LDI  R16, DIG_6  ; if (counter == 6)
-  CPI  R20, 6      ; digit = DIG_6
-  BREQ RETURN
-
-  LDI  R16, DIG_7  ; if (counter == 7)
-  CPI  R20, 7      ; digit = DIG_7
-  BREQ RETURN
-
-  LDI  R16, DIG_8  ; if (counter == 8)
-  CPI  R20, 8      ; digit = DIG_8
-  BREQ RETURN
-
-  LDI  R16, DIG_9  ; if (counter == 9)
-  CPI  R20, 9      ; digit = DIG_9
-  BREQ RETURN
-; Set display digit bits
-RETURN:
-  MOV  R21, R16
+; Load digit bits into the display register
+LOAD_DIGIT:
+  LDI R30, low(DIGITS)
+  LDI R31, high(DIGITS)
+  ADD R30, R20
+  ADC R31, R1
+  LPM R21, Z
   RET
